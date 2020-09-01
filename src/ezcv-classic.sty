@@ -1,0 +1,200 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ezcv-classic}[2013/08/16 v0.1 personal cv template]
+
+\RequirePackage{eztemplates}
+\RequirePackage{biblatex}
+\moderncvstyle{classic}
+\moderncvcolor{red}
+
+% adjust the page margins
+\usepackage[margin=2cm]{geometry}
+\setlength{\hintscolumnwidth}{2.5cm}                % if you want to change the width of the column with the dates
+%\setlength{\makecvtitlenamewidth}{10cm}           % for the 'classic' style, if you want to force the width allocated to your name and avoid line breaks. be careful though, the length is normally calculated to avoid any overlap with your personal info; use this at your own typographical risks...
+
+\renewcommand*\namefont{\Huge\mdseries\upshape}
+\renewcommand*{\titlefont}{\Large\mdseries\slshape}
+
+%\renewcommand*{\cventry}[7][.25em]{%
+%  \cvitem[#1]{#2}{%
+%    {\bfseries#3}%
+%    \ifthenelse{\equal{#4}{}}{}{, {\slshape#4}}%
+%    \ifthenelse{\equal{#5}{}}{}{, #5}%
+%    \ifthenelse{\equal{#6}{}}{}{, #6}%
+%    .\strut%
+%    \ifthenelse{\equal{#7}{}}{}%
+%      {\newline{}\begin{minipage}[t]{\linewidth}\small#7\end{minipage}}}}
+
+\newcommand\ifhasvalue[1]{\ifthenelse{\not\equal{\usevalue{#1}}{}}}
+\newcommand\optvalue[3]{\ifhasvalue{#2}{#1{\usevalue{#2}}#3}{}}
+
+\newcommand*{\doentry}[4][.25em]{%
+  \cvitem[#1]{#2}{%
+    {#3}%
+    \ifthenelse{\equal{#4}{}}{}%
+      {\newline{}\begin{minipage}[t]{\linewidth}\small#4\end{minipage}}}}
+
+\newtemplate{entry}{
+  date/.initial = {},
+  title/.initial = {},
+  address/.initial = {},
+  institution/.initial = {},
+  institution url/.initial={},
+  organisation/.style={institution={#1}},
+  organisation url/.style={institution url={#1}},
+  description/.initial = {},
+  show/.code = {%
+    \doentry{\usevalue{date}}
+            {\textbf{\usevalue{title}}%
+             \ifhasvalue{institution}{,
+               \ifhasvalue{institution url}{%
+                 \href{\usevalue{institution url}}%
+                      {\textit{\color{color1}\usevalue{institution}}}%
+               }{%
+                 \textit{\usevalue{institution}}%
+               }%
+             }{}%
+             \optvalue{, }{address}{}.}
+            {\usevalue{description}}
+  }
+}
+
+\newcommand\award{\entry}
+
+\newtemplate{thesis}{
+  date/.initial = {},
+  title/.initial = {},
+  author/.initial = {},
+  address/.initial = {},
+  degree/.initial = {},
+  institution/.initial = {},
+  show/.code = {%
+    \doentry{\usevalue{date}}
+            {\usevalue{author},
+             \textit{\usevalue{institution}},
+             \usevalue{address}.}
+            {\f{Title} ``\usevalue{title}''\newline
+             \f{Degree} \usevalue{degree}}%
+  }
+}
+
+\newtemplate{committee}{
+  date/.initial = {},
+  venue/.initial = {},
+  show/.code = {%
+    \doentry{\usevalue{date}}
+            {\usevalue{venue}}
+            {}%
+  }
+}
+
+\newtemplate{student}{
+  date/.initial={},
+  name/.initial={},
+  project/.initial={},
+  host/.initial={},
+  show/.code = {%
+    \doentry{\usevalue{date}}
+            {\usevalue{name}, ``\usevalue{project}'' at \usevalue{host}.}
+            {}%
+  }
+}
+
+\newtemplate{module}{
+  date/.initial={},
+  code/.initial={},
+  title/.initial={},
+  level/.initial={},
+  students/.initial={},
+  institution/.initial={},
+  show/.code = {%
+    \doentry{\usevalue{date}}
+            {{\small\usevalue{code}} \textit{``\usevalue{title}''},
+             \usevalue{level} module (\usevalue{students} participants)
+             at \usevalue{institution}.}
+            {}%
+  }
+}
+
+
+
+\newtemplate{skill}{
+  subject/.initial = {},
+  details/.initial = {},
+  show/.code = {%
+    \doentry{\usevalue{subject}}
+            {\usevalue{details}}
+            {}%
+  }
+}
+
+\newtemplate{programming}{
+  subject/.initial = {},
+  details/.initial = {},
+  show/.code = {%
+    \doentry{}
+            {\f{\usevalue{subject}} \usevalue{details}}
+            {}%
+  }
+}
+
+
+\newtemplate{reference}{
+  name/.initial = {},
+  institution/.initial = {},
+  address/.initial = {},
+  phone/.initial = {},
+  email/.initial = {},
+  show/.code = {%
+    \doentry{}{\textbf{\usevalue{name}}}
+              {\usevalue{institution} \newline
+               \usevalue{address} \newline
+              \phonesymbol \usevalue{phone} \newline
+              \emailsymbol\emaillink{\usevalue{email}}}%
+}
+}
+%            {\textbf\usevalue{author}}
+%            {\usevalue{institution} \newline
+%             \usevalue{address} \newline
+  
+
+
+\newcommand\f[1]{\textcolor{color2}{#1:}}
+
+\newcommand\fakecite[1]{[\foreach \x [count=\xi] in {#1}
+ {\ifnum\xi=1 \hyperref[\x]{\textcolor{color1}{\x}}\else,\hyperref[\x]{\textcolor{color1}{\x}}\fi}]} 
+
+%\newcommand\fakecite[1]{[\foreach \x [count=\ni] in {#1} {
+
+
+
+
+\newcommand\biblist[1]{\foreach \x in {#1} {\cvitem{[\x]\label{\x}}{\fullcite{\x}.}\smallskip}}
+
+\ExecuteBibliographyOptions{
+  doi=false,url=false,isbn=false,
+  maxnames=10,
+}
+
+\newbibmacro{string+link}[1]{%
+  \iffieldundef{doi}{%
+    \iffieldundef{url}{%
+      \iffieldundef{isbn}{%
+        \iffieldundef{issn}{%
+          #1%
+        }{%
+          \href{http://books.google.com/books?vid=ISSN\thefield{issn}}{\color{color1}#1}%
+        }%
+      }{%
+        \href{http://books.google.com/books?vid=ISBN\thefield{isbn}}{\color{color1}#1}%
+      }%
+    }{%
+      \href{\thefield{url}}{\color{color1}#1}%
+    }%
+  }{%
+    \href{http://dx.doi.org/\thefield{doi}}{\color{color1}#1}%
+  }%
+}
+
+\DeclareFieldFormat{title}{\usebibmacro{string+link}{\mkbibemph{#1}}}
+\DeclareFieldFormat[article,incollection,inproceedings,techreport]{title}%
+    {\usebibmacro{string+link}{\mkbibquote{#1}}}

@@ -1,0 +1,14 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{eztemplates}[2013/08/16 v0.1 very simple templates]
+
+\usepackage{ezkeys}
+
+\newcommand\setoptions{\pgfqkeys{/ezoptions}}
+\newcommand\ifoption[1]{\iftoggle{/ezoptions/#1}}
+
+\newcommand*\usevalue[1]{\pgfkeysusevalue{\pgfkeysdefaultpath#1}}
+\newcommand\newcscommand[1]{\expandafter\newcommand\csname#1\endcsname}
+\newcommand\newtemplate[2]{%
+  \newcscommand{set#1}{\pgfqkeys{/eztemplate/#1}}%
+  \newcscommand{#1}[1]{\bgroup\csuse{set#1}{##1,show}\egroup}%
+  \csuse{set#1}{show/.code={(template not defined)},#2}}

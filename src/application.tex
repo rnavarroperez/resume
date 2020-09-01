@@ -1,0 +1,78 @@
+% !TEX root = ./navarro-cv-en.tex
+
+\documentclass[10pt,letter,sans]{moderncv}
+
+\usepackage{ezcv-classic}
+\usepackage[utf8]{inputenc}
+\usepackage{dtk-logos}
+\usepackage{amssymb}
+%\usepackage{fontspec}
+
+
+\newcommand\Cpp{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bfseries ++}}}
+
+\newcommand\lt{<}
+
+\providecommand\ExtOptions{}
+\setoptions{
+  english/.is toggle,
+  spanish/.style={english=false},
+  best papers/.is toggle,
+  all papers/.is toggle,
+  english,best papers,all papers,
+  .also/.expanded=\ExtOptions,
+}
+
+
+\catcode`<=\active
+\def<#1|#2>{\ifoption{english}{#1}{#2}}
+
+% personal data
+\name{Rodrigo}{Navarro Pérez}
+\title{Curriculum vit\ae}
+\address{Department of Physics}%
+        {San Diego State University University}%
+        {550 Campanile Drive. San Diego, CA-92182<| EEUU>}
+\phone[mobile]{+1~(515)~441~9222}
+\phone[fixed]{+1~(619)~594~6153}
+\email{rnavarroperez@sdsu.edu}
+\homepage{rnavarroperez.sdsu.edu}
+\social[github]{rnavarroperez}
+%\quote{Some quote}
+
+\addbibresource{rodrigo.bib}
+
+% bibliography with mutiple entries
+%\usepackage{multibib}
+%\newcites{book,misc}{{Books},{Others}}
+%----------------------------------------------------------------------------------
+%            content
+%----------------------------------------------------------------------------------
+\begin{document}
+
+%-----       letter       ---------------------------------------------------------
+% \input{coverletter_research.tex}
+% \clearpage
+% \input{coverletter_teaching.tex}
+
+%% %-----       resume       ---------------------------------------------------------
+\clearpage
+\input{cv.tex}
+
+%----- list of publications -------------------------------------------------------
+%% \clearpage
+%% \makeheading
+\input{publications.tex}
+
+%----- research statement  -------------------------------------------------------
+% \clearpage
+% \makeheading
+% \input{research_statement.tex}
+
+%----- teaching statement  -------------------------------------------------------
+% \clearpage
+% \makeheading
+% \input{teaching_statement.tex} 
+
+
+\end{document}
